@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .input-helper {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .result p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        
+        .status {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .status.blue {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .status.green {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status.orange {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+        
+        .status.red {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .error {
+            color: #d32f2f;
+            background-color: #ffebee;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .error.show {
+            display: block;
+        }
+        
+        .bmi-chart {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .chart-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .chart-bar {
+            height: 30px;
+            background: linear-gradient(90deg, #1565c0 0%, #2e7d32 25%, #e65100 75%, #c62828 100%);
+            border-radius: 15px;
+            position: relative;
+        }
+        
+        .chart-pointer {
+            position: absolute;
+            top: -8px;
+            width: 2px;
+            height: 46px;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BMI Calculator</h1>
+        <p class="subtitle">Check your fitness status</p>
+        
+        <form id="bmiForm">
+            <div class="form-group">
+                <label for="weight">Weight (kg)</label>
+                <input 
+                    type="number" 
+                    id="weight" 
+                    placeholder="Enter your weight" 
+                    min="1"
+                    step="0.1"
+                    required
+                >
+                <div class="input-helper">Enter your weight in kilograms</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="height">Height (cm)</label>
+                <input 
+                    type="number" 
+                    id="height" 
+                    placeholder="Enter your height" 
+                    min="1"
+                    step="0.1"
+                    required
+                >
+                <div class="input-helper">Enter your height in centimeters</div>
+            </div>
+            
+            <button type="submit">Calculate BMI</button>
+        </form>
+        
+        <div class="error" id="error"></div>
+        
+        <div class="result" id="result">
+            <h2 id="bmiValue"></h2>
+            <p id="bmiLabel">Your BMI is</p>
+            <div class="status" id="status"></div>
+            
+            <div class="bmi-chart">
+                <div class="chart-label">
+                    <span>Underweight</span>
+                    <span>Normal</span>
+                    <span>Overweight</span>
+                    <span>Obese</span>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-pointer" id="pointer"></div>
+                </div>
+                <div style="text-align: center; margin-top: 5px; font-size: 12px; color: #999;">
+                    18.5 --- 25 --- 30
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const form = document.getElementById('bmiForm');
+        const resultDiv = document.getElementById('result');
+        const errorDiv = document.getElementById('error');
+        const bmiValue = document.getElementById('bmiValue');
+        const statusDiv = document.getElementById('status');
+        const pointer = document.getElementById('pointer');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            
+            errorDiv.classList.remove('show');
+            
+            try {
+                const response = await fetch('/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ weight, height })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error);
+                }
+                
+                // Display result
+                bmiValue.textContent = data.bmi;
+                statusDiv.textContent = data.status;
+                statusDiv.className = 'status ' + data.color;
+                
+                // Update pointer position (0-100%)
+                let pointerPosition = 0;
+                if (data.bmi < 18.5) {
+                    pointerPosition = (data.bmi / 18.5) * 25;
+                } else if (data.bmi < 25) {
+                    pointerPosition = 25 + ((data.bmi - 18.5) / 6.5) * 25;
+                } else if (data.bmi < 30) {
+                    pointerPosition = 50 + ((data.bmi - 25) / 5) * 25;
+                } else {
+                    pointerPosition = 75 + Math.min(((data.bmi - 30) / 20) * 25, 25);
+                }
+                
+                pointer.style.left = pointerPosition + '%';
+                
+                resultDiv.classList.add('show');
+            } catch (error) {
+                errorDiv.textContent = error.message || 'An error occurred. Please try again.';
+                errorDiv.classList.add('show');
+                resultDiv.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
